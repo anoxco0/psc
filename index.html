@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="./style/navbar.css">
+</head>
+<body>
+   <div id="container"></div>
+   <div id="main">
+      <button id="repo-btn">Get User Repo</button>
+   </div>
+   <div>Repos list of user</div>
+   <div id="repos"></div>
+   
+</body>
+</html>
+<script type="module">
+    import navbar from "./components/navbar.js"
+    import getUser from "./scripts/getUser.js"
+    document.getElementById("container").innerHTML=navbar();
+
+    let input = document.getElementById("search-input");
+    input.addEventListener('keypress', searchUser);
+
+    var response;
+
+    let btn = document.getElementById("repo-btn")
+        btn.addEventListener('click', getUserRepo) 
+
+    async function searchUser(){
+       if(event.key==='Enter'){
+        let query = input.value;
+
+        response = await getUser(query);
+        
+        let {avatar_url} = response;
+        document.getElementById("profile-img").src=avatar_url;
+        console.log(response);
+        let repo = response;
+    }
+    }
+
+    async function getUserRepo(){
+        let res = await fetch(response.repos_url);
+        let repo_data = await res.json();
+        let {name} = repo_data;
+        console.log(repo_data)
+
+        repo_data.forEach((element, index)=>{
+
+            let con = document.createElement("div");
+            let heading = document.createElement("h3");
+            heading.innerHTML=`repo${index+1}:  ${element.name} `;
+
+            con.append(heading);
+
+            document.getElementById("repos").append(con);
+        })
+    }
+
+</script>
